@@ -7,7 +7,7 @@
 
 ]]
 
-local CurrentVersion = "0.0.1"
+local CurrentVersion = "0.0.2"
 local Old_Version = game:GetService("HttpService"):JSONDecode((game:HttpGet("https://raw.githubusercontent.com/TheXbots/new_GEX/main/Version.lua"))).Version
 
 if not CurrentVersion == Old_Version then
@@ -17,14 +17,57 @@ end
 local API = {}
 local Toggleables = {}
 
+local Player = game.Players.LocalPlayer
+
 -- Compatibility Check
 
 local Compatibility = {}
 
-if not ((getgenv and getgenv()) or _G) then
-	
-end
+local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
+local sc = (debug and debug.setconstant) or setconstant
+local gc = (debug and debug.getconstants) or getconstants
+local sethidden = sethiddenproperty or set_hidden_property or set_hidden_prop
 
+if not sethidden then
+    Compatibility["sethidden"] = false
+else
+    Compatibility["sethidden"] = true
+end
+if not getnilinstances then
+    Compatibility["getnilinstances"] = false
+else
+    Compatibility["getnilinstances"] = true
+end
+if not fireproximityprompt then
+    Compatibility["fireproximityprompt"] = false
+else
+    Compatibility["fireproximityprompt"] = true
+end
+if not firetouchinterest then
+    Compatibility["firetouchinterest"] = false
+else
+    Compatibility["firetouchinterest"] = true
+end
+if not fireclickdetector then
+    Compatibility["fireclickdetector"] = false
+else
+    Compatibility["fireclickdetector"] = true
+end
+if not sc or not getgc or not gc then
+    Compatibility["getgc"] = false
+else
+    Compatibility["getgc"] = true																																																																																																																																																																																																																																																																																																													
+end
+if not saveinstance or saveinstance() then
+    Compatibility["saveinstance"] = false
+else
+    Compatibility["saveinstance"] = true
+end
+if not writefile then
+    Compatibility["writefile"] = false
+else
+    Compatibility["writefile"] = true
+end
 if not getconnections then
     Compatibility["getconnections"] = false
 else
@@ -40,6 +83,16 @@ if not getnamecallmethod then
 else
     Compatibility["getnamecallmethod"] = true
 end
+if not queueteleport then
+    Compatibility["queueteleport"] = false
+else
+    Compatibility["queueteleport"] = true
+end
+if not setfpscap then
+    Compatibility["setfpscap"] = false
+else
+    Compatibility["setfpscap"] = true
+end
 local GameEnvironment
 
 if not ((getgenv and getgenv()) or _G) then
@@ -54,11 +107,14 @@ else
     Compatibility["getgenv"] = true
 end
 
-local Player = game.Players.LocalPlayer
-
 
 -- Area where I create all the toggleables for things like Flying, Noclip, ect
 
+API.Toggleables["Flying"] = false
+API.Toggleables["Noclip"] = false
+API.Toggleables["God"] = false
+API.Toggleables["Invis"] = false
+API.Toggleables["InfJump"] = false
 
 
 -- This is the functions area. You can call them with API:FunctionName() and any variable names
@@ -70,132 +126,16 @@ local Player = game.Players.LocalPlayer
 ]]
 
 function API:Toggle(value, type, newvalue)
-    if type == "boolean" then
-        API.Toggleables[value] = not API.Toggleables[value]
-    elseif type == "string" then
-        API.Toggleables[value] = newvalue
-    end
+	if type == "boolean" then
+	     API.Toggleables[value] = not API.Toggleables[value]
+	elseif type == "string" then
+	     API.Toggleables[value] = newvalue
+	elseif not type then
+	     API.Toggleables[value] = not API.Toggleables[value]
+	end
 end
 
 -- initialize the toggles
-
-if invisRunning then return end
-	invisRunning = true
-	-- Full credit to AmokahFox @V3rmillion
-	local Player = speaker
-	repeat wait(.1) until Player.Character
-	local Character = Player.Character
-	Character.Archivable = true
-	local IsInvis = false
-	local IsRunning = true
-	local InvisibleCharacter = Character:Clone()
-	InvisibleCharacter.Parent = Lighting
-	local Void = workspace.FallenPartsDestroyHeight
-	InvisibleCharacter.Name = ""
-	local CF
-
-	local invisFix = RunService.Stepped:Connect(function()
-		pcall(function()
-			local IsInteger
-			if tostring(Void):find'-' then
-				IsInteger = true
-			else
-				IsInteger = false
-			end
-			local Pos = Player.Character.HumanoidRootPart.Position
-			local Pos_String = tostring(Pos)
-			local Pos_Seperate = Pos_String:split(', ')
-			local X = tonumber(Pos_Seperate[1])
-			local Y = tonumber(Pos_Seperate[2])
-			local Z = tonumber(Pos_Seperate[3])
-			if IsInteger == true then
-				if Y <= Void then
-					Respawn()
-				end
-			elseif IsInteger == false then
-				if Y >= Void then
-					Respawn()
-				end
-			end
-		end)
-	end)
-
-	for i,v in pairs(InvisibleCharacter:GetDescendants())do
-		if v:IsA("BasePart") then
-			if v.Name == "HumanoidRootPart" then
-				v.Transparency = 1
-			else
-				v.Transparency = .5
-			end
-		end
-	end
-
-	function Respawn()
-		IsRunning = false
-		if IsInvis == true then
-			pcall(function()
-				Player.Character = Character
-				wait()
-				Character.Parent = workspace
-				Character:FindFirstChildWhichIsA'Humanoid':Destroy()
-				IsInvis = false
-				InvisibleCharacter.Parent = nil
-				invisRunning = false
-			end)
-		elseif IsInvis == false then
-			pcall(function()
-				Player.Character = Character
-				wait()
-				Character.Parent = workspace
-				Character:FindFirstChildWhichIsA'Humanoid':Destroy()
-				TurnVisible()
-			end)
-		end
-	end
-
-	local invisDied
-	invisDied = InvisibleCharacter:FindFirstChildOfClass'Humanoid'.Died:Connect(function()
-		Respawn()
-		invisDied:Disconnect()
-	end)
-
-	if IsInvis == true then return end
-	IsInvis = true
-	CF = workspace.CurrentCamera.CFrame
-	local CF_1 = Player.Character.HumanoidRootPart.CFrame
-	Character:MoveTo(Vector3.new(0,math.pi*1000000,0))
-	workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
-	wait(.2)
-	workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
-	InvisibleCharacter = InvisibleCharacter
-	Character.Parent = Lighting
-	InvisibleCharacter.Parent = workspace
-	InvisibleCharacter.HumanoidRootPart.CFrame = CF_1
-	Player.Character = InvisibleCharacter
-	execCmd('fixcam')
-	Player.Character.Animate.Disabled = true
-	Player.Character.Animate.Disabled = false
-
-	function TurnVisible()
-		if IsInvis == false then return end
-		invisFix:Disconnect()
-		invisDied:Disconnect()
-		CF = workspace.CurrentCamera.CFrame
-		Character = Character
-		local CF_1 = Player.Character.HumanoidRootPart.CFrame
-		Character.HumanoidRootPart.CFrame = CF_1
-		InvisibleCharacter:Destroy()
-		Player.Character = Character
-		Character.Parent = workspace
-		IsInvis = false
-		Player.Character.Animate.Disabled = true
-		Player.Character.Animate.Disabled = false
-		invisDied = Character:FindFirstChildOfClass'Humanoid'.Died:Connect(function()
-			Respawn()
-			invisDied:Disconnect()
-		end)
-		invisRunning = false
-	end
 
 --[[
 
