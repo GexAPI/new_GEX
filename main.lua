@@ -19,6 +19,26 @@ local Toggleables = {}
 
 local Player = game.Players.LocalPlayer
 
+function API:Tween(Obj, Prop, New, Time)
+	if not Time then
+		Time = .5
+	end
+	local TweenService = game:GetService("TweenService")
+	local info = TweenInfo.new(
+		Time, 
+		Enum.EasingStyle.Quart, 
+		Enum.EasingDirection.Out, 
+		0, 
+		false,
+		0
+	)
+	local propertyTable = {
+		[Prop] = New,
+	}
+
+	TweenService:Create(Obj, info, propertyTable):Play()
+end
+
 function API:Notif(Text,Dur)
 	task.spawn(function()
 		if not Dur then
@@ -100,7 +120,7 @@ if not sc or not getgc or not gc then
 else
     Compatibility["getgc"] = true																																																																																																																																																																																																																																																																																																													
 end
-if not saveinstance or saveinstance() then
+if not saveinstance then
     Compatibility["saveinstance"] = false
 	API:Notif("'saveinstance' command not available.",5)
 else
@@ -210,5 +230,4 @@ end
 function API:Gravity(grav)
   workspace.Gravity = grav
 end
-
 
