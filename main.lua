@@ -7,7 +7,12 @@
 
 ]]
 
-local Version = 0.0.1
+local CurrentVersion = "0.0.1"
+local Old_Version = game:GetService("HttpService"):JSONDecode((game:HttpGet("https://raw.githubusercontent.com/TheXbots/new_GEX/main/Version.lua"))).Version
+
+if not CurrentVersion == Old_Version then
+    print("API is outdated! Please get latest version.")
+end
 
 local API = {}
 local Toggleables = {}
