@@ -76,7 +76,7 @@ API.Toggleables = {}
 
 local Player = game.Players.LocalPlayer
 
-local CheckCompatibility = false -- IF YOU CHECK THIS TO FALSE, IT WILL ALMOST GUARANTEE A SCRIPT BREAK
+local CheckCompatibility = true -- IF YOU CHECK THIS TO FALSE, IT WILL ALMOST GUARANTEE A SCRIPT BREAK
 local OverrideCompatibility = false -- This will automatically make it assume each function exists.
 
 local Compatibility = {}
@@ -290,10 +290,6 @@ end
       PLAYER FUNCTIONS
 
 ]]
-
-function API:Speed(speed)
-  Player.Character.Humanoid.WalkSpeed = speed --[[  Calls the Humanoid, then WalkSpeed. ]]
-end
 
 function API:JumpPower(power)
   Player.Character.Humanoid.JumpPower = power
