@@ -66,9 +66,9 @@ function API:Notif(Text,Dur)
 end
 
 local CurrentVersion = "0.0.3"
-local Old_Version = game:GetService("HttpService"):JSONDecode((game:HttpGet("https://raw.githubusercontent.com/TheXbots/new_GEX/main/Version.lua"))).Version
+local Old_Version = game:GetService("HttpService"):JSONDecode(game:HttpGet("https://raw.githubusercontent.com/TheXbots/new_GEX/main/Version.lua")).Version
 
-if not CurrentVersion == Old_Version then
+if CurrentVersion ~= Old_Version then
     API:Notif("API is outdated, new one is at GexAPI/new_GEX/main",5)
 end
 
@@ -76,7 +76,7 @@ API.Toggleables = {}
 
 local Player = game.Players.LocalPlayer
 
-local CheckCompatibility = true -- IF YOU CHECK THIS TO FALSE, IT WILL ALMOST GUARANTEE A SCRIPT BREAK
+local CheckCompatibility = false -- IF YOU CHECK THIS TO FALSE, IT WILL ALMOST GUARANTEE A SCRIPT BREAK
 local OverrideCompatibility = false -- This will automatically make it assume each function exists.
 
 local Compatibility = {}
@@ -307,8 +307,4 @@ end
 
 function API:Gravity(grav)
   workspace.Gravity = grav
-end
-
-for i,v in pairs(Compatibility) do
-    print(v)
 end
