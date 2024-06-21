@@ -7,17 +7,7 @@
 
 ]]
 
-local CurrentVersion = "0.0.2"
-local Old_Version = game:GetService("HttpService"):JSONDecode((game:HttpGet("https://raw.githubusercontent.com/TheXbots/new_GEX/main/Version.lua"))).Version
-
-if not CurrentVersion == Old_Version then
-    print("API is outdated! Please get latest version.")
-end
-
 local API = {}
-local Toggleables = {}
-
-local Player = game.Players.LocalPlayer
 
 function API:Tween(Obj, Prop, New, Time)
 	if not Time then
@@ -75,108 +65,196 @@ function API:Notif(Text,Dur)
 	return
 end
 
--- Compatibility Check
+local CurrentVersion = "0.0.3"
+local Old_Version = game:GetService("HttpService"):JSONDecode((game:HttpGet("https://raw.githubusercontent.com/TheXbots/new_GEX/main/Version.lua"))).Version
+
+if not CurrentVersion == Old_Version then
+    print("API is outdated! Please get latest version.")
+end
+
+API.Toggleables = {}
+
+local Player = game.Players.LocalPlayer
+
+local CheckCompatibility = true -- IF YOU CHECK THIS TO FALSE, IT WILL ALMOST GUARANTEE A SCRIPT BREAK
+local OverrideCompatibility = false -- This will automatically make it assume each function exists.
 
 local Compatibility = {}
+-- Compatibility Check
+if CheckCompatibility == true then
+    local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
+    local sc = (debug and debug.setconstant) or setconstant
+    local gc = (debug and debug.getconstants) or getconstants
+    local sethidden = sethiddenproperty or set_hidden_property or set_hidden_prop
 
-local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
-local sc = (debug and debug.setconstant) or setconstant
-local gc = (debug and debug.getconstants) or getconstants
-local sethidden = sethiddenproperty or set_hidden_property or set_hidden_prop
-
-if not sethidden then
-    Compatibility["sethidden"] = false
-    API:Notif("'sethidden' command not available.",5)
-else
-    Compatibility["sethidden"] = true
-end
-if not getnilinstances then
-    Compatibility["getnilinstances"] = false
-	API:Notif("'getnilinstances' command not available.",5)
-else
-    Compatibility["getnilinstances"] = true
-end
-if not fireproximityprompt then
-    Compatibility["fireproximityprompt"] = false
-	API:Notif("'fireproximityprompt' command not available.",5)
-else
-    Compatibility["fireproximityprompt"] = true
-end
-if not firetouchinterest then
-    Compatibility["firetouchinterest"] = false
-	API:Notif("'firetouchinterest' command not available.",5)
-else
-    Compatibility["firetouchinterest"] = true
-end
-if not fireclickdetector then
-    Compatibility["fireclickdetector"] = false
-	API:Notif("'fireclickdetector' command not available.",5)
-else
-    Compatibility["fireclickdetector"] = true
-end
-if not sc or not getgc or not gc then
-    Compatibility["getgc"] = false
-	API:Notif("'getgc' command not available.",5)
-else
-    Compatibility["getgc"] = true																																																																																																																																																																																																																																																																																																													
-end
-if not saveinstance then
-    Compatibility["saveinstance"] = false
-	API:Notif("'saveinstance' command not available.",5)
-else
-    Compatibility["saveinstance"] = true
-end
-if not writefile then
-    Compatibility["writefile"] = false
-	API:Notif("'writefile' command not available.",5)
-else
-    Compatibility["writefile"] = true
-end
-if not getconnections then
-    Compatibility["getconnections"] = false
-	API:Notif("'getconnections' command not available.",5)
-else
-    Compatibility["getconnections"] = true
-end
-if not hookmetamethod then
-    Compatibility["hookmetamethod"] = false
-	API:Notif("'hookmetamethod' command not available.",5)
-else
-    Compatibility["hookmetamethod"] = true
-end
-if not getnamecallmethod then
-    Compatibility["getnamecallmethod"] = false
-	API:Notif("'getnamecallmethod' command not available.",5)
-else
-    Compatibility["getnamecallmethod"] = true
-end
-if not queueteleport then
-    Compatibility["queueteleport"] = false
-	API:Notif("'queueteleport' command not available.",5)
-else
-    Compatibility["queueteleport"] = true
-end
-if not setfpscap then
-    Compatibility["setfpscap"] = false
-	API:Notif("'setfpscap' command not available.",5)
-else
-    Compatibility["setfpscap"] = true
-end
-local GameEnvironment
-
-if not ((getgenv and getgenv()) or _G) then
-    Compatibility["getgenv"] = false
-	API:Notif("'getgenv' command not available.",5)
-else
-    if not (getgenv and getgenv()) then
-        GameEnvironment = _G
+    if not sethidden then
+        Compatibility["sethidden"] = false
+        API:Notif("'sethidden' command not available.",5)
     else
-        GameEnvironment = getgenv()
+        Compatibility["sethidden"] = true
+        API:Notif("'sethidden' command available.",5)
+    end
+    wait(0.8)
+    if not getnilinstances then
+        Compatibility["getnilinstances"] = false
+        API:Notif("'getnilinstances' command not available.",5)
+    else
+        Compatibility["getnilinstances"] = true
+        API:Notif("'getnilinstances' command available.",5)
+    end
+    wait(0.8)
+    if not fireproximityprompt then
+        Compatibility["fireproximityprompt"] = false
+        API:Notif("'fireproximityprompt' command not available.",5)
+    else
+        Compatibility["fireproximityprompt"] = true
+        API:Notif("'fireproximityprompt' command available.",5)
+    end
+    wait(0.8)
+    if not firetouchinterest then
+        Compatibility["firetouchinterest"] = false
+        API:Notif("'firetouchinterest' command not available.",5)
+    else
+        Compatibility["firetouchinterest"] = true
+        API:Notif("'firetouchinterest' command available.",5)
+    end
+    wait(0.8)
+    if not fireclickdetector then
+        Compatibility["fireclickdetector"] = false
+        API:Notif("'fireclickdetector' command not available.",5)
+    else
+        Compatibility["fireclickdetector"] = true
+        API:Notif("'fireclickdetector' command available.",5)
+    end
+    wait(0.8)
+    if not sc or not getgc or not gc then
+        Compatibility["getgc"] = false
+        API:Notif("'getgc' command not available.",5)
+    else
+        Compatibility["getgc"] = true
+        API:Notif("'getgc' command available.",5)																																																																																																																																																																																																																																																																																																													
+    end
+    wait(0.8)
+    if not saveinstance then
+        Compatibility["saveinstance"] = false
+        API:Notif("'saveinstance' command not available.",5)
+    else
+        Compatibility["saveinstance"] = true
+        API:Notif("'saveinstance' command available.",5)
+    end
+    wait(0.8)
+    if not writefile then
+        Compatibility["writefile"] = false
+        API:Notif("'writefile' command not available.",5)
+    else
+        Compatibility["writefile"] = true
+        API:Notif("'writefile' command available.",5)
+    end
+    wait(0.8)
+    if not getconnections then
+        Compatibility["getconnections"] = false
+        API:Notif("'getconnections' command not available.",5)
+    else
+        Compatibility["getconnections"] = true
+        API:Notif("'getconnections' command available.",5)
+    end
+    wait(0.8)
+    if not hookmetamethod then
+        Compatibility["hookmetamethod"] = false
+        API:Notif("'hookmetamethod' command not available.",5)
+    else
+        Compatibility["hookmetamethod"] = true
+        API:Notif("'hookmetamethod' command available.",5)
+    end
+    wait(0.8)
+    if not getnamecallmethod then
+        Compatibility["getnamecallmethod"] = false
+        API:Notif("'getnamecallmethod' command not available.",5)
+    else
+        Compatibility["getnamecallmethod"] = true
+        API:Notif("'getnamecallmethod' command available.",5)
+    end
+    wait(0.8)
+    if not queueteleport then
+        Compatibility["queueteleport"] = false
+        API:Notif("'queueteleport' command not available.",5)
+    else
+        Compatibility["queueteleport"] = true
+        API:Notif("'queueteleport' command available.",5)
+    end
+    wait(0.8)
+    if not setfpscap then
+        Compatibility["setfpscap"] = false
+        API:Notif("'setfpscap' command not available.",5)
+    else
+        Compatibility["setfpscap"] = true
+        API:Notif("'setfpscap' command available.",5)
+    end
+    wait(0.8)
+    local GameEnvironment
+
+    if not ((getgenv and getgenv()) or _G) then
+        Compatibility["getgenv"] = false
+        API:Notif("'getgenv' command not available.",5)
+    else
+        if not (getgenv and getgenv()) then
+            GameEnvironment = _G
+        else
+            GameEnvironment = getgenv()
+        end
+
+        Compatibility["getgenv"] = true
+
+        API:Notif("'getgenv' command available.",5)
+    end
+    local counter = 0
+    for i,v in pairs(Compatibility) do
+        if v == false then
+            counter += 1
+        end
     end
 
-    Compatibility["getgenv"] = true
+    if #Compatibility/2 < counter then
+        API:Notif("Your executor lacks many crucial functions.",5)
+    end
+else
+    if OverrideCompatibility == true then
+        if not (getgenv and getgenv()) then
+            GameEnvironment = _G
+        else
+            GameEnvironment = getgenv()
+        end
+        Compatibility["getgenv"] = true
+        Compatibility["setfpscap"] = true
+        Compatibility["queueteleport"] = true
+        Compatibility["getnamecallmethod"] = true
+        Compatibility["hookmetamethod"] = true
+        Compatibility["getconnections"] = true
+        Compatibility["writefile"] = true
+        Compatibility["saveinstance"] = true
+        Compatibility["getgc"] = true
+        Compatibility["fireclickdetector"] = true
+        Compatibility["firetouchinterest"] = true
+        Compatibility["fireproximityprompt"] = true
+        Compatibility["getnilinstances"] = true
+        Compatibility["sethidden"] = true
+    else
+        Compatibility["getgenv"] = false
+        Compatibility["setfpscap"] = false
+        Compatibility["queueteleport"] = false
+        Compatibility["getnamecallmethod"] = false
+        Compatibility["hookmetamethod"] = false
+        Compatibility["getconnections"] = false
+        Compatibility["writefile"] = false
+        Compatibility["saveinstance"] = false
+        Compatibility["getgc"] = false
+        Compatibility["fireclickdetector"] = false
+        Compatibility["firetouchinterest"] = false
+        Compatibility["fireproximityprompt"] = false
+        Compatibility["getnilinstances"] = false
+        Compatibility["sethidden"] = false
+    end
 end
-
 
 -- Area where I create all the toggleables for things like Flying, Noclip, ect
 
@@ -231,3 +309,6 @@ function API:Gravity(grav)
   workspace.Gravity = grav
 end
 
+for i,v in pairs(Compatibility) do
+    print(v)
+end
